@@ -4,17 +4,22 @@ import WhatsappIcon from "./components/WhatsappIcon";
 const catalogItems = [
   {
     name: "Coctelería Salada",
-    image: "/assets/cocteleria.jpg",
+    image: "/assets/canapes.JPEG",
   },
   {
-    name: "Macarons",
-    image: "/assets/macarons.png",
+    name: "Mini Tortas",
+    image: "/assets/minitortas.JPEG",
   },
   {
-    name: "Queques",
-    image: "/assets/queque.png",
+    name: "Coctelería Dulce",
+    image: "/assets/cocteleriaDulce.jpeg",
     featured: true,
   },
+  {
+    name: "Tortas",
+    image: "/assets/torta.JPG",
+    featured: true,
+  }
 ];
 
 export default function HomePage() {
@@ -83,23 +88,23 @@ export default function HomePage() {
           <div className="flex flex-col gap-4">
             <div className="relative aspect-[4/2] rounded-xl overflow-hidden">
               <img
-                src={catalogItems[1].image}
-                alt={catalogItems[1].name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 left-0 w-full px-4 pb-3 text-white text-lg font-semibold bg-gradient-to-t from-black/40 to-transparent">
-                {catalogItems[1].name}
-                <div className="border-t border-white/40 mt-1 w-full" />
-              </div>
-            </div>
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
-              <img
                 src={catalogItems[2].image}
                 alt={catalogItems[2].name}
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 w-full px-4 pb-3 text-white text-lg font-semibold bg-gradient-to-t from-black/40 to-transparent">
                 {catalogItems[2].name}
+                <div className="border-t border-white/40 mt-1 w-full" />
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
+              <img
+                src={catalogItems[3].image}
+                alt={catalogItems[3].name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 w-full px-4 pb-3 text-white text-lg font-semibold bg-gradient-to-t from-black/40 to-transparent">
+                {catalogItems[3].name}
                 <div className="border-t border-white/40 mt-1 w-full" />
               </div>
             </div>

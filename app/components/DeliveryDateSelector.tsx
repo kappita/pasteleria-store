@@ -28,7 +28,7 @@ const DeliveryDateSelector: React.FC<DeliveryDateSelectorProps> = ({
   return (
     <div className="w-full max-w-3xl">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">
-        Selecciona una fecha para la entrega
+        Selecciona una fecha para el envio de tu pedido:
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
