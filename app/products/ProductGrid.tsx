@@ -24,7 +24,7 @@ export default function ProductGrid({ products, currentPage, totalPages }: any) 
                 src={product.images[0]?.src}
                 alt={product.name}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 768px) 500vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover rounded-t-2xl"
               />
             </div>
