@@ -25,35 +25,43 @@ const catalogItems = [
 export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center ">
-      <section className="flex justify-center items-center relative mt-20">
-        <div className="flex flex-col md:flex-row items-center w-[97%] max-w-6xl mx-auto">
-          <div className="flex-shrink-0 flex items-center justify-center w-[430px] h-[430px] relative z-10">
-            <div className="overflow-hidden rounded-full w-[500px] h-[500px]">
+      <section className="flex justify-center items-center relative mt-12 md:mt-20 py-12">
+        <div className="flex flex-col lg:flex-row items-center w-[97%] lg:w-full max-w-6xl mx-auto">
+          
+          {/* Imagen - Mobile full, Desktop fixed */}
+          <div className="flex-shrink-0 w-full lg:w-[430px] h-[350px] lg:h-[430px] relative z-10 mx-auto lg:mx-0 order-2 lg:order-1">
+            <div className="overflow-hidden rounded-full w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] mx-auto lg:-ml-12">
               <img
                 src="/assets/landingPhoto.png"
                 alt="Pastelera con torta"
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full xl:-translate-y-6 hover:scale-105 transition-transform duration-500"
               />
             </div>
           </div>
-          <div className="bg-[#fbbb5b] rounded-tr-[20px] rounded-br-[20px] rounded-bl-[20px] rounded-tl-[0px] p-24 flex-1 flex flex-col justify-center min-h-[350px] -ml-48 z-0">
-            <h2 className="font-bold text-white text-4xl mb-4 translate-x-30 ">
-              Tortas con Diseños
-            </h2>
-            <hr className="border-white/80 mb-3 translate-x-32 overflow-hidden w-[80%]" />
-            <p className="text-white text-md translate-x-32 w-[80%]">
-              Pastelería fina y coctelería tortas con diseño. Ofrecemos una
-              amplia gama de productos, para todas tus celebraciones y eventos.
-              Con productos de calidad, sin pre mezclas, 100% artesanal. Años de
-              experiencia en el rubro. Chef Pastelera titulada. Especializada en
-              pastelería nacional e internacional, capacitada para pastelería
-              saludable, sin gluten, sin azúcar, sin lactosa, también en
-              coctelería dulce y salada.
-            </p>
+
+          {/* Texto - Exactamente como original en desktop */}
+          <div className="flex-1 text-center lg:text-left order-1 lg:order-2 z-0 xl:translate-y-5">
+            <div className="bg-[#fbbb5b] rounded-tr-[20px] rounded-br-[20px] rounded-bl-[20px] rounded-tl-[0px] p-8 md:p-12 lg:p-24 flex flex-col justify-center min-h-[300px] lg:min-h-[350px] lg:-ml-48 xl:-ml-56 ">
+              <h2 className="font-bold text-white text-2xl md:text-3xl lg:text-4xl mb-4 drop-shadow-lg xl:translate-x-40">
+                Tortas con Diseños
+              </h2>
+              <hr className="border-white/80 mb-3 lg:mb-6 w-[80%] lg:w-[80%] mx-auto lg:mx-0 xl:translate-x-40" />
+              <p className="text-white text-sm md:text-base lg:text-lg leading-relaxed w-full lg:w-[80%] mx-auto lg:mx-0 drop-shadow-md xl:translate-x-40">
+                Pastelería fina y coctelería tortas con diseño. Ofrecemos una
+                amplia gama de productos, para todas tus celebraciones y eventos.
+                Con productos de calidad, sin pre mezclas, 100% artesanal. Años de
+                experiencia en el rubro. Chef Pastelera titulada. Especializada en
+                pastelería nacional e internacional, capacitada para pastelería
+                saludable, sin gluten, sin azúcar, sin lactosa, también en
+                coctelería dulce y salada.
+              </p>
+            </div>
           </div>
         </div>
         <WhatsappIcon />
       </section>
+
+
 
       <section className="py-20">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#fbbb5b]">
@@ -88,23 +96,23 @@ export default function HomePage() {
           <div className="flex flex-col gap-4">
             <div className="relative aspect-[4/2] rounded-xl overflow-hidden">
               <img
+                src={catalogItems[1].image}
+                alt={catalogItems[1].name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 w-full px-4 pb-3 text-white text-lg font-semibold bg-gradient-to-t from-black/40 to-transparent">
+                {catalogItems[1].name}
+                <div className="border-t border-white/40 mt-1 w-full" />
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
+              <img
                 src={catalogItems[2].image}
                 alt={catalogItems[2].name}
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 w-full px-4 pb-3 text-white text-lg font-semibold bg-gradient-to-t from-black/40 to-transparent">
                 {catalogItems[2].name}
-                <div className="border-t border-white/40 mt-1 w-full" />
-              </div>
-            </div>
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
-              <img
-                src={catalogItems[3].image}
-                alt={catalogItems[3].name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 left-0 w-full px-4 pb-3 text-white text-lg font-semibold bg-gradient-to-t from-black/40 to-transparent">
-                {catalogItems[3].name}
                 <div className="border-t border-white/40 mt-1 w-full" />
               </div>
             </div>

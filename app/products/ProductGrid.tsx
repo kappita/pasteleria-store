@@ -12,7 +12,7 @@ export default function ProductGrid({ products, currentPage, totalPages }: any) 
 
   return (
     <div className="">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((product: any) => (
           <Link
             key={product.id}
@@ -28,8 +28,8 @@ export default function ProductGrid({ products, currentPage, totalPages }: any) 
                 className="object-cover rounded-t-2xl"
               />
             </div>
-            <h2 className="text-lg font-medium mt-3 w-full text-center">{product.name}</h2>
-            <p className="text-black font-medium text-lg text-center">Desde <span className="text-2xl">${product.price} CLP</span></p>
+            <h2 className="text-sm md:text-lg font-medium mt-3 w-full text-center">{product.name}</h2>
+            <p className="text-black font-medium text-sm md:text-lg text-center">Desde <span className="text-md font-semibold md:text-xl">${product.price} CLP</span></p>
           </Link>
         ))}
       </div>
