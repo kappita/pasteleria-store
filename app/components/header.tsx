@@ -15,18 +15,20 @@ const Header = () => {
             <div className="xl:hidden xl:block xl:w-24"></div>
             
             <div className="flex-1 max-w-xs">
-              <img
-                src="/assets/logo.png"
-                alt="Tortas con Diseños"
-                className="-translate-x-40 md:-translate-x-36 xl:translate-x-0 h-20 md:h-24 lg:h-40 w-auto object-contain ml-auto md:ml-0"
-              />
+              <Link href="/">
+                <img
+                  src="/assets/logo.png"
+                  alt="Tortas con Diseños"
+                  className="-translate-x-30 xl:translate-x-0 h-20 md:h-24 lg:h-40 w-auto object-contain ml-auto md:ml-0"
+                />
+              </Link>
             </div>
 
 
             {/* Derecha: redes, carrito, user */}
             <div className="flex items-center space-x-2 md:space-x-3">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/tortascondiseno/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1 rounded-full hover:bg-white/20 transition"
@@ -48,8 +50,10 @@ const Header = () => {
                   className="w-6 h-6 md:w-10 md:h-10"
                 />
               </Link>
-
-              <UserMenu />
+              <div className="">
+                <UserMenu />
+              </div>
+              
             </div>
           </div>
         </div>

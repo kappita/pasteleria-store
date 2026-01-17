@@ -35,23 +35,33 @@ export default async function ProductsPage(props: {
   const nonNegativeCurrent = currentPage > 1 ? currentPage - 1 : 0
 
   return (
-    <main className="w-[70vw] py-6">
-      <p className="ml-[20%] pl-6 text-xl font-semibold">Mostrando {1 + (nonNegativeCurrent) * perPage}-{perPage * nonNegativeCurrent + itemsShown} de {totalItems} resultados</p>
-      <div className="w-full flex">
-      {/* 🔹 Barra lateral de filtros */}
-      <aside className="w-[20%] border-r p-6">
-        <FiltersClient categories={categories}/>
-      </aside>
+    <main className="w-full py-6 px-4">
+      {/* 🔹 Contador responsive */}
+      <p className="md:ml-[20%] md:pl-6 text-lg md:text-xl font-semibold text-center md:text-left mb-6">
+        Mostrando {1 + (nonNegativeCurrent) * perPage}-{perPage * nonNegativeCurrent + itemsShown} de {totalItems} resultados
+      </p>
 
-      {/* 🔹 Productos */}
-      <section className="flex-1 p-6">
-        <ProductGrid
-          products={products}
-          currentPage={currentPage}
-          totalPages={totalPages}
-        />
-      </section>
+      <div className="w-full flex flex-col lg:flex-row gap-0 lg:gap-6">
+        {/* 🔹 Filtros - Lateral en desktop, oculto en móvil (usa select en ProductGrid) */}
+        <aside className="-translate-y-8 md:translate-y-0 lg:w-[20%] border-r p-6 top-6 h-fit">
+          <FiltersClient categories={categories}/>
+        </aside>
+
+        {/* 🔹 Productos - Full width en móvil */}
+        <section className="w-full lg:flex-1 p-0 lg:p-6">
+          <ProductGrid
+            products={products}
+            categories={categories}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            productsPerPage={perPage}
+            totalItems={totalItems}
+            nonNegativeCurrent={nonNegativeCurrent}
+            itemsShown={itemsShown}
+          />
+        </section>
       </div>
     </main>
+
   );
 }

@@ -45,11 +45,11 @@ export default function FiltersClient({ categories }: any) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold">Categorías</h2>
+      <h2 className="translate-y-4 md:translate-y-0 md:text-xl font-bold">Categorías</h2>
 
       {/* Categorías */}
       <div>
-        <nav>
+        <nav className="md:block hidden">
           <ul className="divide-y divide-black">
             {categories
               .filter((cat: any) => cat.name !== "Uncategorized")
@@ -73,7 +73,27 @@ export default function FiltersClient({ categories }: any) {
             </li>
           </ul>
         </nav>
+
+        {/* Versión móvil - Menú desplegable */}
+        <div className="md:hidden">
+          <select 
+            onChange={(e) => filterByCategory(Number(e.target.value))}
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            defaultValue=""
+          >
+            <option value="" disabled>Selecciona una categoría</option>
+            <option value={0}>Todos</option>
+            {categories
+              .filter((cat: any) => cat.name !== "Uncategorized")
+              .map((cat: any) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name} ({cat.count})
+                </option>
+              ))}
+          </select>
+        </div>
       </div>
+
 
       {/* Precio */}
       {/* <div>

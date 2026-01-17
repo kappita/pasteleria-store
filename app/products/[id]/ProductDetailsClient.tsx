@@ -2,8 +2,6 @@
 import { useRouter } from "next/navigation";
 import { useCart } from "../../context/CartContext";
 import { useState, useEffect } from "react";
-import DeliveryDatePicker from "../../components/DeliveryDatePicker";
-import { useDeliveryAvailability } from "@/app/hooks/useDeliveryAvailability";
 
 interface Product {
   id: number;
@@ -108,18 +106,12 @@ type bruh = {
 
 function transformToWooVariation(rawAttributes: any, useGlobalPrefix = false) {
   return Object.entries(rawAttributes).map(([key, value]) => {
-    // 1. Clean the Attribute Key
-    // If it's a global attribute (e.g. "Size"), WC expects "pa_size"
     let attributeKey = key;
     if (useGlobalPrefix) {
-      // "Cantidad" -> "pa_cantidad"
       attributeKey = `pa_${key.toLowerCase().replace(/\s+/g, '-')}`;
     }
 
-    // 2. Clean the Value (Optional but recommended for Global Attributes)
-    // Global attributes usually expect the SLUG (e.g. "chocolate-blanco") not the Name ("Chocolate Blanco")
-    // Custom attributes (local to product) expect the exact Name string.
-    let attributeValue:string = value as string;
+    let attributeValue: string = value as string;
     if (useGlobalPrefix) {
       attributeValue = (value as string).toLowerCase().replace(/\s+/g, '-');
     }
@@ -131,19 +123,13 @@ function transformToWooVariation(rawAttributes: any, useGlobalPrefix = false) {
   });
 }
 
-
 export default function ProductDetailsClient({ product, variations }: bruh) {
-  const [selectedAttrs, setSelectedAttrs] = useState<{ [key: string]: string }>(
-    {}
-  );
+  const [selectedAttrs, setSelectedAttrs] = useState<{ [key: string]: string }>({});
   const [currentVariation, setCurrentVariation] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState<string | null>(null);
-  const [deliveryDate, setDeliveryDate] = useState<string>("");
   const [addedSuccess, setAddedSuccess] = useState(false);
-  const { data, getDailyRemaining, refresh } = useDeliveryAvailability();
   const router = useRouter();
-
 
   // Actualiza la variación actual cuando cambian los selects
   useEffect(() => {
@@ -174,9 +160,7 @@ export default function ProductDetailsClient({ product, variations }: bruh) {
   // Agregar al carrito
   const handleAddToCart = async () => {
     if (product.type === "variable" && !currentVariation) {
-      setMessage(
-        "⚠️ Debes seleccionar todas las opciones antes de agregar al carrito."
-      );
+      setMessage("⚠️ Debes seleccionar todas las opciones antes de agregar al carrito.");
       return false;
     }
 
@@ -185,198 +169,161 @@ export default function ProductDetailsClient({ product, variations }: bruh) {
       return false;
     }
 
-
     const item = currentVariation || product;
-    
-
-    // Obtiene la primera cookie
-    const cartRes1 = await fetch("/api/store/cart", { cache: "no-store" });
-    const variation = transformToWooVariation(selectedAttrs)
-
-    console.log(variation)
+    const variation = transformToWooVariation(selectedAttrs);
 
     const addRes = await fetch("/api/store/cart/addItem", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: item.id,
-                             quantity: quantity,
-                             variation: variation,
-                          }),
+      body: JSON.stringify({ 
+        id: item.id,
+        quantity: quantity,
+        variation: variation,
+      }),
     });
 
-    if (!addRes.ok) throw new Error("Error al agregar al carrito");
+    if (!addRes.ok) {
+      setMessage("❌ Error al agregar al carrito. Intenta nuevamente.");
+      return false;
+    }
 
-    
-
-    // setMessage("✅ Producto añadido al carrito!");
     setAddedSuccess(true);
+    setMessage(null);
     return true;
   };
 
   const handleBuyNow = async () => {
     const res = await handleAddToCart();
-    router.push("/cart");
+    if (res) {
+      router.push("/cart");
+    }
   };
 
-  const areAttributesSelected = product.type !== "variable" || product.attributes.every((attr) => selectedAttrs[attr.name]);
-  // 2. Calcular el límite
-  const dailyLimit = deliveryDate ? (getDailyRemaining(deliveryDate) ?? 0) : 0;
-  const globalLimit = data?.global_remaining ?? 0;
-
+  const areAttributesSelected = product.type !== "variable" || 
+    product.attributes.every((attr) => selectedAttrs[attr.name]);
 
   return (
-    <div className="mx-auto">
-      {/* TODO: IMPLEMENTAR BREADCRUMBS PARA MANEJO DE CATEGORÍAS */}
-      <p>{`Productos > ${product.categories[0].name} > ${product.name}`}</p>
-      <div className="grid grid-cols-2">
-        <img
-          src={currentVariation?.image?.src || product.images[0]?.src}
-          alt={product.name}
-          className="w-full h-96 mb-6 object-cover"
-        />
-        <div className="w-full px-24">
-          <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+    <div className="w-full max-w-6xl mx-auto px-2 sm:px-6 lg:px-8 py-8">
+      {/* Breadcrumbs responsive */}
+      <nav className="text-sm text-gray-500 mb-6 hidden sm:block">
+        <p>{`Productos > ${product.categories[0]?.name} > ${product.name}`}</p>
+      </nav>
 
-          {/* Mostrar precio */}
-          <p className="text-2xl font-semibold mb-6">
+      {/* Grid responsive: Móvil stack, Desktop side-by-side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
+        {/* Imagen */}
+        <div className="w-full">
+          <img
+            src={currentVariation?.image?.src || product.images[0]?.src}
+            alt={product.name}
+            className="w-full h-80 sm:h-96 lg:h-[500px] rounded-2xl object-cover shadow-lg"
+          />
+        </div>
+
+        {/* Contenido */}
+        <div className="w-full flex flex-col lg:pl-0 xl:pl-12 space-y-6">
+          {/* Título */}
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+            {product.name}
+          </h1>
+
+          {/* Precio */}
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">
             ${(parseFloat(currentPrice) * quantity).toFixed(2)}
           </p>
 
-          <p className="text-gray-700 mb-4">
+          {/* Descripción */}
+          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
             {product.description.replace(/<[^>]+>/g, "")}
           </p>
 
-          {/* Si es producto variable, mostrar selects dinámicos */}
+          {/* Atributos variables */}
           {product.type === "variable" &&
             product.attributes.map((attr: any) => (
-              <div key={attr.name} className="mb-4">
-                <label className="block mb-2 text-lg font-medium">
+              <div key={attr.name} className="space-y-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-900">
                   Selecciona {attr.name.toLowerCase()}:
                 </label>
                 <select
-                  onChange={(e) =>
-                    handleSelectChange(attr.name, e.target.value)
-                  }
+                  onChange={(e) => handleSelectChange(attr.name, e.target.value)}
                   value={selectedAttrs[attr.name] || ""}
-                  className="border p-3 w-full max-w-sm"
+                  className="w-full max-w-sm sm:max-w-md border border-gray-300 rounded-xl p-3 sm:p-4 focus:ring-2 focus:ring-[#E985A7] focus:border-[#E985A7] bg-white shadow-sm"
                 >
                   <option value="">Selecciona una opción</option>
                   {attr.options.map((opt: string) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
+                    <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
             ))}
 
-          {/* ---------------- PASO 3: CANTIDAD ---------------- */}
-          {/* Se bloquea si no hay fecha seleccionada o si el cupo es 0 */}
-          <div className="mb-4">
+          {/* Cantidad */}
+          <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <label htmlFor="quantity" className="text-lg font-medium">
+              <label htmlFor="quantity" className="text-sm sm:text-base font-medium text-gray-900">
                 Cantidad:
               </label>
               <input
                 id="quantity"
                 type="number"
                 min="1"
-                // El maximo es el menor entre el diario y el global
                 max={10}
-                // Deshabilitado si no hay fecha o si no hay cupo
-                // disabled={ maxQuantityAvailable <= 0}
                 value={quantity}
                 onChange={(e) => {
                   const val = Number(e.target.value);
-                  // Logica de limitacion estricta
-                  setQuantity(val);
+                  if (val < 1) setQuantity(1);
+                  else setQuantity(val);
                 }}
-                className={`border rounded-lg p-2 w-20 text-center`}
+                className="border rounded-xl p-3 w-20 sm:w-24 text-center font-medium text-lg focus:ring-2 focus:ring-[#E985A7]"
               />
             </div>
-            {/* Mensajes de ayuda para el usuario */}
-              {/* {deliveryDate && maxQuantityAvailable > 0 && (
-                  <p className="text-sm text-gray-500 mt-1">
-                      Máximo disponible para esta fecha: {maxQuantityAvailable}
-                  </p>
-              )}
-              {deliveryDate && maxQuantityAvailable <= 0 && (
-                  <p className="text-sm text-red-500 mt-1">
-                      No hay cupo disponible para esta fecha.
-                  </p>
-              )} */}
-            </div>
-          {/* TODO: AGREGAR SELECCION DE FECHA */}
+          </div>
 
-          <div className="flex w-[70%] items-stretch justify-between mt-6">
-            {/* Botón agregar al carrito */}
-            {/* ESTADO 1: Aún no agregado al carrito */}
+          {/* Botones */}
+          <div className="space-y-3 lg:space-y-4 w-full lg:w-auto">
             {!addedSuccess ? (
-              <div className="flex flex-col gap-4">
-                {/* Botón Principal: Agregar */}
+              <>
                 <button
                   onClick={handleAddToCart}
-                    // disabled={}
-                  className="bg-transparent border-[#E985A7] border-2 text-[#E985A7] px-6 py-3 rounded-full w-full font-bold hover:bg-[#E985A7] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={product.type === "variable" && !areAttributesSelected}
+                  className="w-full lg:w-auto bg-transparent border-2 border-[#E985A7] text-[#E985A7] px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base hover:bg-[#E985A7] hover:text-white transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Agregar al carrito
+                  {product.type === "variable" && !areAttributesSelected 
+                    ? "Selecciona opciones" 
+                    : "Agregar al carrito"}
                 </button>
-
-                {/* Botón Secundario: Comprar ahora (Opcional, si quieres mantenerlo antes de agregar) */}
                 <button
                   onClick={handleBuyNow}
-                  // disabled={!deliveryDate || maxQuantityAvailable <= 0}
-                  className="text-gray-500 underline hover:text-[#E985A7] text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={product.type === "variable" && !areAttributesSelected}
+                  className="w-full sm:translate-x-4 lg:w-auto text-gray-500 underline hover:text-[#E985A7] text-xs sm:text-sm disabled:opacity-50"
                 >
                   O comprar ahora directamente
                 </button>
-              </div>
+              </>
             ) : (
-              
-              /* ESTADO 2: Producto Agregado con éxito */
-              <div className="flex flex-col gap-3 animate-fade-in">
-                
-                {/* Mensaje de éxito integrado visualmente */}
-                <div className="bg-green-100 text-green-700 p-3 rounded-lg text-center mb-2 border border-green-200">
-                  ✅ ¡Se ha agregado con éxito al carrito!
+              <div className="space-y-3">
+                <div className="bg-green-100 text-green-700 p-4 rounded-xl text-center border border-green-200">
+                  ✅ ¡Agregado al carrito con éxito!
                 </div>
-
-                {/* Botón 1: Ir al carrito (El botón original transformado) */}
                 <button
-                  // TODO: Asegúrate de poner aquí la ruta correcta a tu carrito
-                  onClick={() => router.push("/cart")} 
-                  className="bg-[#E985A7] text-white px-6 py-3 rounded-full w-full font-bold hover:bg-pink-600 transition-colors shadow-md"
+                  onClick={() => router.push("/cart")}
+                  className="w-full bg-[#E985A7] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base hover:bg-pink-400 transition-all shadow-lg"
                 >
                   Ir al carrito
                 </button>
-
-                {/* Botón 2: Seguir comprando (Botón nuevo) */}
                 <button
-                  // TODO: Asegúrate de poner aquí la ruta a tu catálogo
-                  onClick={() => router.push('/products')} 
-                  className="bg-gray-100 text-gray-700 px-6 py-3 rounded-full w-full font-medium hover:bg-gray-200 transition-colors"
+                  onClick={() => router.push('/products')}
+                  className="w-full bg-gray-100 text-gray-700 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-medium hover:bg-gray-200 transition-all"
                 >
                   Seguir comprando
                 </button>
               </div>
             )}
-
-            {/* Manejo de errores (Mensajes que NO son de éxito, ej: 'Falta stock') */}
-            {message && !addedSuccess && (
-              <div className="mt-4 text-center p-3 rounded bg-yellow-100 text-yellow-700">
-                {message}
-              </div>
-            )}
           </div>
-          {/* Mensaje de confirmación */}
-          {message && (
-            <div
-              className={`mt-4 text-center p-3 rounded ${
-                message.startsWith("✅")
-                  ? "bg-green-100 text-green-700"
-                  : "bg-yellow-100 text-yellow-700"
-              }`}
-            >
+
+          {/* Mensajes */}
+          {message && !addedSuccess && (
+            <div className="p-4 rounded-xl bg-yellow-100 text-yellow-700 text-sm text-center border border-yellow-200">
               {message}
             </div>
           )}

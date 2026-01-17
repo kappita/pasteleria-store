@@ -13,7 +13,7 @@ export default async function WhatsappIcon() {
       <img
         src="/assets/whatsapp.svg"
         alt="Whatsapp"
-        className="w-16 h-16"
+        className="w-10 h-10 md:w-16 md:h-16"
         draggable={false}
       />
     </a>
