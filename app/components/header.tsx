@@ -28,7 +28,7 @@ const Header = () => {
             {/* Derecha: redes, carrito, user */}
             <div className="flex items-center space-x-2 md:space-x-3">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/tortascondiseno/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1 rounded-full hover:bg-white/20 transition"
@@ -50,7 +50,7 @@ const Header = () => {
                   className="w-6 h-6 md:w-10 md:h-10"
                 />
               </Link>
-              <div className="translate-x-2">
+              <div className="">
                 <UserMenu />
               </div>
               

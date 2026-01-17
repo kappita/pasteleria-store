@@ -36,7 +36,7 @@ export default function UserMenu() {
   }
 
   return (
-    <div className="relative" onClick={() => setOpen(!open)}>
+    <div className="flex" onClick={() => setOpen(!open)}>
       <img
         src="/assets/user.png"  // tu PNG
         alt="Perfil"
